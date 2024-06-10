@@ -6,6 +6,7 @@ import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.client.ClientRequestContext;
 import jakarta.ws.rs.client.ClientRequestFilter;
 import jakarta.ws.rs.ext.Provider;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
@@ -17,17 +18,20 @@ public class AuthorizationHeaderFilter implements ClientRequestFilter {
 
     private static final Logger LOGGER = Logger.getLogger(AuthorizationHeaderFilter.class);
 
-    private static final String JIRA_BEARER_TOKEN = System.getenv("JIRA_ACCESS_TOKEN");
-    private static final String GITHUB_BEARER_TOKEN = System.getenv("GITHUB_ACCESS_TOKEN");
+    @ConfigProperty(name = "jira.access-token")
+    String jiraAccessToken;
+
+    @ConfigProperty(name = "github.access-token")
+    String githubAccessToken;
 
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
         String targetHost = requestContext.getUri().getHost();
 
         if (targetHost.contains("issues.redhat.com")) {
-            addAuthorizationHeader(requestContext, JIRA_BEARER_TOKEN, "Jira", "Bearer ");
+            addAuthorizationHeader(requestContext, jiraAccessToken, "Jira", "Bearer ");
         } else if (targetHost.contains("api.github.com")) {
-            addAuthorizationHeader(requestContext, GITHUB_BEARER_TOKEN, "GitHub", "token ");
+            addAuthorizationHeader(requestContext, githubAccessToken, "GitHub", "token ");
         }
     }
 
