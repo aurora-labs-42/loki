@@ -47,7 +47,7 @@ public class GitHubRepository {
         String repo = repoParts[1];
 
         GitHubIssueRequest issueRequest = new GitHubIssueRequest(title, body, labels);
-        return client.createIssue(owner,repo,issueRequest);
+        return client.createIssue(owner, repo, issueRequest);
     }
 }
 

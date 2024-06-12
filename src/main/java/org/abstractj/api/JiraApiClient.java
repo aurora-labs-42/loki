@@ -10,7 +10,7 @@ import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 @RegisterProvider(AuthorizationHeaderFilter.class)
-@RegisterRestClient(configKey="jira-api")
+@RegisterRestClient(configKey = "jira-api")
 public interface JiraApiClient {
 
     @GET
