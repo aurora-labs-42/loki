@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+// Uncomment the @Provider annotation to enable this filter - used for debug purposes
 //@Provider
 public class LoggingFilter implements ClientRequestFilter, ClientResponseFilter {
 

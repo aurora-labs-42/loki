@@ -1,0 +1,41 @@
+name: Example Workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-loki:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Get latest release tag
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      id: get_latest_release
+      run: |
+        LATEST_TAG=$(curl -s https://api.github.com/repos/aurora-labs-42/loki/releases/latest | jq -r .tag_name)
+        echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
+
+    - name: Download latest Loki release 
+      run: |
+        curl -L -o loki-dist.zip https://github.com/aurora-labs-42/loki/releases/download/${{ env.LATEST_TAG }}/loki-${{ env.LATEST_TAG }}-dist.zip
+
+    - name: Uncompress zip file
+      run: unzip loki-dist.zip
+
+    - name: Synchronize Jiras to GitHub
+      env:
+        JIRA_ACCESS_TOKEN: ${{ secrets.JIRA_ACCESS_TOKEN }}
+        GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        REPO_NAME=$(basename -s .git `git config --get remote.origin.url`)
+        java -jar quarkus-run.jar --from-jira --to-repo=keycloak-poc/${REPO_NAME}

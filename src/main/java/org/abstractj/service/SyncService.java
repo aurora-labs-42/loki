@@ -6,6 +6,7 @@ import org.abstractj.model.JiraIssues;
 import org.abstractj.repository.GitHubRepository;
 import org.abstractj.repository.JiraRepository;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.jboss.logging.Logger;
 
 import java.io.UnsupportedEncodingException;
 
@@ -26,6 +27,8 @@ public class SyncService {
     @ConfigProperty(name = "loki.jira.url")
     String jiraUrl;
 
+    private static final Logger LOGGER = Logger.getLogger(SyncService.class);
+
     public void sync(String repository) {
         JiraIssues jiraIssues = jiraRepository.getIssuesFromFilter();
 
@@ -37,7 +40,9 @@ public class SyncService {
                     gitHubRepository.createIssue(repository, i.fields.getCleanSummary(), body, githubLabels);
                 }
             } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
+                LOGGER.errorf("Error: Failed to encode query", e);
+            } catch (Exception e) {
+                LOGGER.errorf("Error:", e);
             }
         }
     }
