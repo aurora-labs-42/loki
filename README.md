@@ -70,4 +70,3 @@ To run the application, the following environment variables need to be set:
 
 - `GITHUB_ACCESS_TOKEN` : GitHub token for authentication.
 - `JIRA_ACCESS_TOKEN` : API token for JIRA authentication.
-```
