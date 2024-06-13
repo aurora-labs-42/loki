@@ -1,8 +1,8 @@
 # loki
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
-
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+The `loki` project, embodies flexibility and adaptability. It seamlessly manages and synchronizes 
+JIRA issues with GitHub repositories, making the management of security issues better, streamlining 
+your workflow  and enhancing productivity.
 
 ## Running the application in dev mode
 
@@ -33,12 +33,12 @@ The application, packaged as an _über-jar_, is now runnable using `java -jar ta
 
 ## Creating a native executable
 
-You can create a native executable using: 
+You can create a native executable using:
 ```shell script
 ./mvnw package -Dnative
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: 
+Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
 ```shell script
 ./mvnw package -Dnative -Dquarkus.native.container-build=true
 ```
@@ -46,3 +46,28 @@ Or, if you don't have GraalVM installed, you can run the native executable build
 You can then execute your native executable with: `./target/loki-1.0.0-SNAPSHOT-runner`
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.
+
+## Supported Commands
+
+### `loki`
+
+The `loki` command is used to sync JIRA issues with a GitHub repository.
+
+#### Usage
+
+```shell script
+java -jar target/quarkus-app/quarkus-run.jar loki --from-jira --to-repo owner/repo
+```
+
+#### Options
+
+- `--from-jira` : Specifies that the source is JIRA. This option is required.
+- `--to-repo` : Specifies the target GitHub repository in the format `owner/repo`. This option is required.
+
+## Environment Variables
+
+To run the application, the following environment variables need to be set:
+
+- `GITHUB_ACCESS_TOKEN` : GitHub token for authentication.
+- `JIRA_ACCESS_TOKEN` : API token for JIRA authentication.
+```
