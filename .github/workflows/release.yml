@@ -28,7 +28,7 @@ jobs:
 
       - name: Find ZIP file
         id: find_zip
-        run: echo "::set-output name=zip_path::$(find target -name 'loki-*-SNAPSHOT-dist.zip')"
+        run: echo "::set-output name=zip_path::$(find target -name 'loki-*-dist.zip')"
 
       - name: Debug - Check Version and ZIP Path
         run: |
