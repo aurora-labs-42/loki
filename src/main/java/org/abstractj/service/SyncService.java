@@ -23,13 +23,9 @@ public class SyncService {
     @ConfigProperty(name = "loki.github.labels")
     String[] githubLabels;
 
-    @Inject
-    @ConfigProperty(name = "loki.jira.url")
-    String jiraUrl;
-
     private static final Logger LOGGER = Logger.getLogger(SyncService.class);
 
-    public void sync(String repository) {
+    public void sync(String jiraUrl, String repository) {
         JiraIssues jiraIssues = jiraRepository.getIssuesFromFilter();
 
         for (JiraIssues.Issue i : jiraIssues.issues) {

@@ -14,7 +14,7 @@ public class LokiCommand implements Runnable {
     SyncService syncService;
 
     @CommandLine.Option(names = {"--from-jira"}, description = "Source JIRA", required = true)
-    boolean fromJira;
+    String fromJira;
 
     @CommandLine.Option(names = {"--to-repo"}, description = "GitHub repository 'owner/repo'", required = true)
     String repository;
@@ -24,8 +24,8 @@ public class LokiCommand implements Runnable {
 
     @Override
     public void run() {
-        if (fromJira) {
-            syncService.sync(repository);
+        if (fromJira!= null && !fromJira.isEmpty() && repository != null && !repository.isEmpty()) {
+            syncService.sync(fromJira, repository);
         } else {
             CommandLine.usage(spec.commandLine(), System.err);
         }
