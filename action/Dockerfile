@@ -1,8 +1,9 @@
 FROM openjdk:17-slim
 
-RUN apt-get update && apt-get install -y curl unzip
+# Add Loki-dist.zip to the Docker image
+ADD ./target/*.tar.gz /opt/loki
 
-COPY entrypoint.sh /entrypoint.sh
+COPY ./action/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
