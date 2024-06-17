@@ -1,5 +1,5 @@
-name: 'Loki Action'
-description: 'A GitHub Action synchronize Jira issues to GitHub repositories'
+name: 'loki-sync-jira-to-github'
+description: 'Synchronize Jira issues to GitHub repositories'
 inputs:
   from-jira:
     description: 'Flag to indicate from Jira'
