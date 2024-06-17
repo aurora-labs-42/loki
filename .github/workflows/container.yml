@@ -21,7 +21,7 @@ jobs:
         run: mvn clean package
 
       - name: Build Docker image
-        run: docker build -t quay.io/aurora-labs-42/loki:latest .
+        run: docker build -f action/Dockerfile -t quay.io/aurora-labs-42/loki:latest .
 
       - name: Login to Quay.io
         run: echo "${{ secrets.QUAY_PASSWORD_SECRET }}" | docker login quay.io -u "${{ secrets.QUAY_USERNAME_SECRET }}" --password-stdin
