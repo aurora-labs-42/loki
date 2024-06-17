@@ -1,5 +1,5 @@
-name: 'loki-sync-jira-to-github'
-description: 'Synchronize Jira issues to GitHub repositories'
+name: 'Loki Action'
+description: 'A GitHub Action synchronize Jira issues to GitHub repositories'
 inputs:
   from-jira:
     description: 'Flag to indicate from Jira'
@@ -9,7 +9,7 @@ inputs:
     required: true
 runs:
   using: 'docker'
-  image: 'quay.io/aurora-labs-42/loki-action:latest'
+  image: 'Dockerfile'
   args:
     - ${{ inputs.from-jira }}
     - ${{ inputs.to-repo }}
