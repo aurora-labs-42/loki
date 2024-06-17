@@ -1,0 +1,18 @@
+name: 'Loki Action'
+description: 'A GitHub Action synchronize Jira issues to GitHub repositories'
+inputs:
+  from-jira:
+    description: 'Flag to indicate from Jira'
+    required: true
+  to-repo:
+    description: 'The destination repository'
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  env:
+    GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+    JIRA_ACCESS_TOKEN: ${{ secrets.JIRA_ACCESS_TOKEN }}
+  args:
+    - ${{ inputs.from-jira }}
+    - ${{ inputs.to-repo }}
