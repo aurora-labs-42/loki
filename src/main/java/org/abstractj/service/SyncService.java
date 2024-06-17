@@ -25,15 +25,29 @@ public class SyncService {
 
     private static final Logger LOGGER = Logger.getLogger(SyncService.class);
 
-    public void sync(String jiraUrl, String repository) {
+    private String fromJira;
+    private String toRepository;
+
+    public SyncService sync(String fromJira) {
+        this.fromJira = fromJira;
+        return this;
+    }
+
+    public SyncService to(String repository) {
+        this.toRepository = repository;
+        return this;
+    }
+
+    public void execute(String jql) {
+
         JiraIssues jiraIssues = jiraRepository.getIssuesFromFilter();
 
         for (JiraIssues.Issue i : jiraIssues.issues) {
             try {
-                boolean issueExists = gitHubRepository.issueExists(repository, i.fields.getCveId());
+                boolean issueExists = gitHubRepository.issueExists(toRepository, i.fields.getCveId());
                 if (!issueExists) {
-                    String body = String.format("### Source: %s%s%n%s", jiraUrl, i.key, i.fields.description);
-                    gitHubRepository.createIssue(repository, i.fields.getCleanSummary(), body, githubLabels);
+                    String body = String.format("### Source: %s%s%n%s", fromJira, i.key, i.fields.description);
+                    gitHubRepository.createIssue(toRepository, i.fields.getCleanSummary(), body, githubLabels);
                 }
             } catch (UnsupportedEncodingException e) {
                 LOGGER.errorf("Error: Failed to encode query", e);
