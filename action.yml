@@ -9,7 +9,7 @@ inputs:
     required: true
 runs:
   using: 'docker'
-  image: 'Dockerfile'
+  image: 'quay.io/aurora-labs-42/loki-action:latest'
   args:
     - ${{ inputs.from-jira }}
     - ${{ inputs.to-repo }}
