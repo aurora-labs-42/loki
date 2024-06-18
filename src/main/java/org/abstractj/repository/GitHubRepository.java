@@ -51,11 +51,13 @@ public class GitHubRepository {
             }
             return response.total_count > 0;
         } catch (WebApplicationException e) {
+            String responseBody = e.getResponse().readEntity(String.class);
             if (e.getResponse().getStatus() == Response.Status.UNAUTHORIZED.getStatusCode()) {
-                LOGGER.errorf("Error: Bad credentials. Aborting script.", e);
+                LOGGER.errorf("Error: Bad credentials.", e);
             } else if (e.getResponse().getStatus() == Response.Status.FORBIDDEN.getStatusCode()) {
                 LOGGER.errorf("Error: API rate limit exceeded.", e);
             }
+            LOGGER.errorf("Error: %s", responseBody);
             throw e;
         }
     }
