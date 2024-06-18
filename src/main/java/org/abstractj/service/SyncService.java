@@ -70,6 +70,8 @@ public class SyncService {
                     LOGGER.errorf("Error:", e);
                 }
             }
+        } else {
+            LOGGER.infof("No issues found for query: %s", jql);
         }
     }
 }
