@@ -56,18 +56,19 @@ public class SyncService {
     public void execute(String jql) {
 
         JiraIssues jiraIssues = jiraRepository.getIssuesFromFilter(jql);
-
-        for (JiraIssues.Issue i : jiraIssues.issues) {
-            try {
-                boolean issueExists = gitHubRepository.issueExists(toRepository, i.fields.getCveId());
-                if (!issueExists) {
-                    String body = String.format("### Source: %s%s%n%s", fromJira, i.key, i.fields.description);
-                    gitHubRepository.createIssue(toRepository, i.fields.getCleanSummary(), body, githubLabels);
+        if (jiraIssues != null) {
+            for (JiraIssues.Issue i : jiraIssues.issues) {
+                try {
+                    boolean issueExists = gitHubRepository.issueExists(toRepository, i.fields.getCveId());
+                    if (!issueExists) {
+                        String body = String.format("### Source: %s%s%n%s", fromJira, i.key, i.fields.description);
+                        gitHubRepository.createIssue(toRepository, i.fields.getCleanSummary(), body, githubLabels);
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    LOGGER.errorf("Error: Failed to encode query", e);
+                } catch (Exception e) {
+                    LOGGER.errorf("Error:", e);
                 }
-            } catch (UnsupportedEncodingException e) {
-                LOGGER.errorf("Error: Failed to encode query", e);
-            } catch (Exception e) {
-                LOGGER.errorf("Error:", e);
             }
         }
     }
