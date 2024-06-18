@@ -19,20 +19,20 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
 import org.abstractj.api.JiraApiClient;
+import org.abstractj.api.JiraApiClientFactory;
 import org.abstractj.model.JiraIssues;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class JiraRepository {
     @Inject
-    @RestClient
-    JiraApiClient jiraApiClient;
+    JiraApiClientFactory jiraApiClientFactory;
 
     private static final Logger LOGGER = Logger.getLogger(JiraRepository.class);
 
-    public JiraIssues getIssuesFromFilter(String jql) {
+    public JiraIssues getIssuesFromFilter(String baseUrl, String jql) {
         try {
+            JiraApiClient jiraApiClient = jiraApiClientFactory.create(baseUrl);
             return jiraApiClient.searchIssues(jql, 50);
         } catch (WebApplicationException e) {
             String responseBody = e.getResponse().readEntity(String.class);

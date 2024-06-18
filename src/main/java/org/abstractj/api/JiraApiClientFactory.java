@@ -13,21 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.abstractj.api;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.QueryParam;
-import org.abstractj.filter.AuthorizationHeaderFilter;
-import org.abstractj.model.JiraIssues;
-import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
+import jakarta.enterprise.context.ApplicationScoped;
+import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
-@RegisterProvider(AuthorizationHeaderFilter.class)
-public interface JiraApiClient {
+import java.net.URI;
 
-    @GET
-    @Path("/search")
-    @Produces("application/json")
-    JiraIssues searchIssues(@QueryParam("jql") String jql, @QueryParam("maxResults") int maxResults);
+@ApplicationScoped
+public class JiraApiClientFactory {
+
+    public JiraApiClient create(String baseUrl) {
+        return RestClientBuilder.newBuilder()
+                .baseUri(URI.create(baseUrl))
+                .build(JiraApiClient.class);
+    }
 }
