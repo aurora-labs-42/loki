@@ -20,7 +20,6 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.WebApplicationException;
 import org.abstractj.api.JiraApiClient;
 import org.abstractj.model.JiraIssues;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
@@ -30,20 +29,16 @@ public class JiraRepository {
     @RestClient
     JiraApiClient jiraApiClient;
 
-    @Inject
-    @ConfigProperty(name = "loki.jira.jql")
-    String jql;
-
     private static final Logger LOGGER = Logger.getLogger(JiraRepository.class);
 
-    public JiraIssues getIssuesFromFilter() {
+    public JiraIssues getIssuesFromFilter(String jql) {
         try {
             return jiraApiClient.searchIssues(jql, 50);
         } catch (WebApplicationException e) {
-            LOGGER.errorf("Error fetching issues from Jira", e);
-        } catch (Exception e) {
-            LOGGER.errorf("Error", e);
+            String responseBody = e.getResponse().readEntity(String.class);
+            LOGGER.errorf("Error: %s", responseBody);
+            LOGGER.errorf("Error: %s", e);
         }
-        return null;
+        throw new RuntimeException("Failed to get issues from filter");
     }
 }

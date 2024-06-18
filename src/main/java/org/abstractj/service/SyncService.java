@@ -55,7 +55,7 @@ public class SyncService {
 
     public void execute(String jql) {
 
-        JiraIssues jiraIssues = jiraRepository.getIssuesFromFilter();
+        JiraIssues jiraIssues = jiraRepository.getIssuesFromFilter(jql);
 
         for (JiraIssues.Issue i : jiraIssues.issues) {
             try {
