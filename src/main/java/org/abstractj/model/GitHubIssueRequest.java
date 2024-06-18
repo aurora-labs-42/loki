@@ -15,12 +15,14 @@
  */
 package org.abstractj.model;
 
+import java.util.List;
+
 public class GitHubIssueRequest {
     public String title;
     public String body;
-    public String[] labels;
+    public List<String> labels;
 
-    public GitHubIssueRequest(String title, String body, String[] labels) {
+    public GitHubIssueRequest(String title, String body, List<String> labels) {
         this.title = title;
         this.body = body;
         this.labels = labels;

@@ -20,10 +20,10 @@ import jakarta.inject.Inject;
 import org.abstractj.model.JiraIssues;
 import org.abstractj.repository.GitHubRepository;
 import org.abstractj.repository.JiraRepository;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 @ApplicationScoped
 public class SyncService {
@@ -34,14 +34,11 @@ public class SyncService {
     @Inject
     GitHubRepository gitHubRepository;
 
-    @Inject
-    @ConfigProperty(name = "loki.github.labels")
-    String[] githubLabels;
-
     private static final Logger LOGGER = Logger.getLogger(SyncService.class);
 
     private String fromJira;
     private String toRepository;
+    private List<String> labels;
 
     public SyncService sync(String fromJira) {
         this.fromJira = fromJira;
@@ -50,6 +47,11 @@ public class SyncService {
 
     public SyncService to(String repository) {
         this.toRepository = repository;
+        return this;
+    }
+
+    public SyncService with(List<String> labels) {
+        this.labels = labels;
         return this;
     }
 
@@ -62,7 +64,7 @@ public class SyncService {
                     boolean issueExists = gitHubRepository.issueExists(toRepository, i.fields.getCveId());
                     if (!issueExists) {
                         String body = String.format("### Source: %s%s%n%s", fromJira, i.key, i.fields.description);
-                        gitHubRepository.createIssue(toRepository, i.fields.getCleanSummary(), body, githubLabels);
+                        gitHubRepository.createIssue(toRepository, i.fields.getCleanSummary(), body, labels);
                     }
                 } catch (UnsupportedEncodingException e) {
                     LOGGER.errorf("Error: Failed to encode query", e);

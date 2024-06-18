@@ -21,6 +21,8 @@ import org.abstractj.service.SyncService;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 
+import java.util.List;
+
 @TopCommand
 @Command(name = "loki", mixinStandardHelpOptions = true, description = "Sync Jiras with GitHub")
 public class LokiCommand implements Runnable {
@@ -37,6 +39,9 @@ public class LokiCommand implements Runnable {
     @CommandLine.Option(names = {"--jql"}, description = "JQL query", required = true)
     String jql;
 
+    @CommandLine.Option(names = {"-l", "--labels"}, description = "Comma-separated list of labels", required = true, split = ",")
+    private List<String> labels;
+
     @CommandLine.Spec
     CommandLine.Model.CommandSpec spec;
 
@@ -45,7 +50,7 @@ public class LokiCommand implements Runnable {
         if (fromJira == null || fromJira.isEmpty() || repository == null || repository.isEmpty() || jql == null || jql.isEmpty()) {
             CommandLine.usage(spec.commandLine(), System.err);
         } else {
-            syncService.sync(fromJira).to(repository).execute(jql);
+            syncService.sync(fromJira).to(repository).with(labels).execute(jql);
         }
     }
 }

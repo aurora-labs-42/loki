@@ -28,6 +28,7 @@ import org.jboss.logging.Logger;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @ApplicationScoped
 public class GitHubRepository {
@@ -60,7 +61,7 @@ public class GitHubRepository {
     }
 
     // Create a new issue in a GitHub repository
-    public Response createIssue(String repository, String title, String body, String[] labels) {
+    public Response createIssue(String repository, String title, String body, List<String> labels) {
         try {
             String[] repoParts = repository.split("/");
             String owner = repoParts[0];
