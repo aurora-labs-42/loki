@@ -21,27 +21,23 @@ import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.client.ClientRequestContext;
 import jakarta.ws.rs.client.ClientRequestFilter;
 import jakarta.ws.rs.ext.Provider;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
 
 @Provider
-@Priority(Priorities.AUTHENTICATION)
+@Priority(Priorities.AUTHORIZATION)
 @ApplicationScoped
 public class AuthorizationHeaderFilter implements ClientRequestFilter {
 
     private static final Logger LOGGER = Logger.getLogger(AuthorizationHeaderFilter.class);
 
-    @ConfigProperty(name = "jira.access-token")
-    String jiraAccessToken;
-
-    @ConfigProperty(name = "github.access-token")
-    String githubAccessToken;
-
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
         String targetHost = requestContext.getUri().getHost();
+
+        String jiraAccessToken = System.getenv("JIRA_ACCESS_TOKEN");
+        String githubAccessToken = System.getenv("GITHUB_ACCESS_TOKEN");
 
         if (targetHost.contains("issues.redhat.com")) {
             addAuthorizationHeader(requestContext, jiraAccessToken, "Jira", "Bearer ");
